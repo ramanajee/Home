@@ -1,0 +1,275 @@
+/*
+    FreeCharge Missions Stylesheet
+    @Suheltanveer
+*/
+
+
+/* legacy styles - needs to be removed after the current campaigns are over */
+.final-page .recharge-summary-block,
+.final-page .missions-info-block,
+.final-page .faq-block {
+    background-color: #FFF;
+    margin-bottom: 20px;
+}
+
+.final-page .recharge-summary,
+.final-page .faq,
+.final-page .missions-info {
+    padding: 20px;
+    border: 1px solid #EAEDEF;
+}
+
+.final-page .missions-info-block .missions-content {
+    margin-top: 20px;
+}
+
+
+#final-page-deals .sub-head h3,
+#missions-list .sub-head h3 {
+    font-size: 12px;
+    font-weight: 200;
+    line-height: 1;
+    margin: 0;
+    display: inline-block;
+    background-color: #fff;
+    z-index: 2;
+    position: relative;
+    padding-right: 10px;
+    color: #919bac;
+    text-transform: uppercase;
+}
+
+
+#final-page-deals .sub-head hr,
+#missions-list .sub-head hr {
+    height: 0;
+    border-top: 1px solid #eaedef;
+    margin: 0;
+    position: absolute;
+    top: 14px;
+    width: 100%;
+    z-index: 1;
+}
+
+#final-page-deals .reward-info .reward-item,
+#missions-list .reward-info .reward-item {
+    padding-bottom: 10px;
+}
+
+#final-page-deals .reward-item .reward-item-innerWrap,
+#missions-list .reward-item .reward-item-innerWrap {
+    padding: 5px 7px;
+    border-bottom: 1px solid #ffffff;
+    border-top: 1px solid #ffffff;
+    cursor: pointer;
+}
+
+#final-page-deals .reward-info .reward-logo-wrap,
+#missions-list .reward-info .reward-logo-wrap {
+    float: left;
+}
+
+#final-page-deals .reward-info .reward-logo-wrap .reward-logo-insideWrap,
+#missions-list .reward-info .reward-logo-wrap .reward-logo-insideWrap {
+    width: 160px;
+    height: 100px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    background: #ffffff;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+#final-page-deals .reward-info .reward-logo-insideWrap .reward-logo,
+#missions-list .reward-info .reward-logo-insideWrap .reward-logo {
+    margin: 0;
+}
+
+#final-page-deals .reward-info .reward-logo-wrap .logo-overlay,
+#final-page-deals .reward-info .reward-snippet-wrapper-success,
+#final-page-deals .reward-info .success .disclaimer-trigger,
+#missions-list .reward-info .reward-logo-wrap .logo-overlay,
+#missions-list .reward-info .reward-snippet-wrapper-success,
+#missions-list .reward-info .success .disclaimer-trigger {
+    display: none;
+}
+
+#final-page-deals .reward-info .reward-snippet-wrapper-init,
+#final-page-deals .reward-info .success .reward-snippet-wrapper-success,
+#missions-list .reward-info .reward-snippet-wrapper-init,
+#missions-list .reward-info .success .reward-snippet-wrapper-success {
+    display: inline;
+}
+#final-page-deals .reward-info .reward-snippet-wrapper,
+#missions-list .reward-info .reward-snippet-wrapper {
+    width: 320px;
+    margin: 0 5px 0 20px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+#final-page-deals .reward-info .reward-snippet-wrapper h4,
+#missions-list .reward-info .reward-snippet-wrapper h4 {
+    color: #086485;
+    font-size: 20px;
+    font-weight: normal;
+    margin: 0 0 10px;
+}
+
+#final-page-deals .reward-item .reward-item-innerWrap .getRewardButton,
+#missions-list .reward-item .reward-item-innerWrap .getRewardButton {
+    margin-top: 30px;
+}
+
+#final-page-deals .reward-info .success .reward-logo-wrap,
+#missions-list .reward-info .success .reward-logo-wrap {
+    position: relative;
+}
+
+#final-page-deals .reward-info .success .reward-logo-wrap .reward-logo,
+#missions-list .reward-info .success .reward-logo-wrap .reward-logo {
+    opacity: 0.3;
+}
+#final-page-deals .reward-info .success .reward-logo-wrap .logo-overlay,
+#missions-list .reward-info .success .reward-logo-wrap .logo-overlay {
+    display: block;
+    position: absolute;
+    top: 12px;
+    left: 41px;
+}
+/* end - legacy styles */
+
+
+
+.missions-page {
+    background-color: #fafafa;
+    margin-bottom: 20px;
+}
+.missions-page h1 {
+    margin-bottom: 5px;
+    font-size: 24px;
+}
+.missions-page h2 {
+    font-size: 14px;
+    margin-top: 0;
+    margin-bottom: 30px;
+    color: #919bac;
+}
+
+.mission {
+    background-color: #fff;
+    border: 1px solid #eaedef;
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+}
+.mission .sticker {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 80px;
+    height: 75px;
+    background: url(../../images/singlepage/get-bg.png) no-repeat 0 0;
+    color: #fff;
+    padding: 20px 0 0 20px;
+}
+.mission .sticker .save {
+    font-size: 12px;
+    line-height: 12px;
+}
+.mission .sticker .amount {
+    font-size: 26px;
+    line-height: 26px;
+}
+.mission .sticker .amount span.INR {
+    font-size: 10px;
+    font-weight: bold;
+    vertical-align: super;
+}
+/*.mission h3 {
+    margin: 0 0 15px;
+    padding-bottom: 10px;
+    color: #919bac;
+    border-bottom: 1px solid #eaedef;
+}
+.mission h3 > span {
+    padding-left: 10px;
+    color: #34495e;
+}*/
+.mission .t {
+    display: table;
+}
+.mission .tl,
+.mission .tr {
+    display: table-cell;
+    vertical-align: top;
+}
+.mission .tl > .img {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 10px;
+    position: relative;
+}
+.mission .deal-img {
+    max-width: 120px;
+    max-height: 120px;
+    display: block;
+}
+.mission .tl > a {
+    font-size: 10px;
+}
+.mission .tr {
+    padding-left: 15px;
+}
+.mission .tr h5 {
+    color: #34495e;
+    font-size: 18px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+.mission .tr p {
+    font-size: 12px;
+}
+.mission .btn {
+    padding: 8px 30px;
+}
+.mission .btn-normal {
+    color: #919bac;
+    border: 1px solid #919bac;
+    padding: 8px 30px;
+}
+
+/* hidden elements - only shown after certain actions */
+.mission .tick,
+.mission .message{
+    display: none;
+}
+
+/* display elements after successful event trigger by adding class "fcSuccess" to .mission */
+.fcSuccess .deal-img {
+    opacity: 0.3;
+}
+.fcSuccess .tick {
+    display: block;
+    position: absolute;
+    top: 24px;
+    left: 24px;
+}
+.fcSuccess .default {
+    display: none;
+}
+.fcSuccess .message {
+    display: block;
+}
+
+/* facebook widget styles */
+.fb-widget {
+    border: 1px solid #eaedef;
+}
+.fb-widget > div {
+    border-top: 1px solid #eaedef;
+.missions-page .social-media-links {
+    margin: 15px;
+}

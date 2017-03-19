@@ -1,0 +1,91 @@
+﻿@using Microsoft.AspNet.Identity
+@model Home.Models.GroceriesCategories
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModal-label">New Category</h4>
+</div>
+<div class="modal-body">
+
+
+    @*this is the partial view stored  on dialog box*@
+    <div class="form-horizontal" style="margin:0 auto;width:60%">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group input-group input-group-sm">
+            <label class="input-group-addon">Grocery Name</label>
+            @Html.EditorFor(model => model.GroceriesName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.GroceriesName, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <p id="empty" style="display:none;color:red" class=" col-md-12"> Category Name can not be Empty</p>
+        </div>
+    </div>
+
+    @*<div class="form-group">
+            <div id="empty" style="display:none"> @Html.Label("Category should not be empty", new { htmlAttributes = new { @class = "inputclass" } })</div>
+        </div>*@
+    <div class="form-group">
+        @Html.HiddenFor(model => model.AppUserId, new { Value = @User.Identity.GetUserId() })
+    </div>
+    <style>
+        .inputclass {
+            color: red;
+        }
+    </style>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+    <button type="button" id="dialogSave" class="btn btn-success btn-sm">Save</button>
+</div>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+    $("#dialogSave").click(function () {
+        $(this).text("Saving...");
+
+        var a = $("#GroceriesName").val();
+        var b = $("#AppUserId").val();
+
+        if (a == '') {
+            $("#empty").text("Name Can't be empty");
+            $("#empty").show();
+            $(this).text("Save");
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: '/GroceriesLists/AddNewCategory',
+                data:JSON.stringify({NewGrocery:a,AppId:b}),
+                //data: JSON.stringify(NewGrocery),
+                contentType: "application/json;charset=utf-8",
+                processData: true,
+                success: function (data, status, xhr) {
+                    if (data != null && data.success) {
+                        $('#GroceriesCategoriesId').append(
+                               $('<option></option>')
+                                   .val(data.category.GroceriesCategoriesId)
+                                   .html(data.category.GroceriesName)
+                                   .prop('selected', true)  // Selects the new Genre in the DropDown LB
+                           );
+                        $('.dropdownforSearchGroceries').append(
+                              $('<option></option>')
+                                  .val(data.category.GroceriesCategoriesId)
+                                  .html(data.category.GroceriesName)
+                          );
+                        $('#myModal').modal('hide');
+                    } else {
+
+                        alert(data.responseText);
+                        $("#dialogSave").text("Save");
+
+                        $("#empty").text(data.responseText);
+                        $("#empty").show();
+
+                    }
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                },
+            });
+        }
+    });
+</script>

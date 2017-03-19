@@ -1,0 +1,191 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_userLayout.cshtml";
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/font-awesome.css" rel="stylesheet" />
+<link rel="stylesheet" href="/css/metro-bootstrap.css" />
+<link href="~/css/metro-bootstrap-responsive.css" rel="stylesheet" />
+<link href="~/css/iconFont.min.css" rel="stylesheet" />
+<link href="~/Content/themes/base/core.css" rel="stylesheet" />
+<link href="~/Content/themes/base/datepicker.css" rel="stylesheet" />
+<link href="~/Content/themes/base/theme.css" rel="stylesheet" />
+<link href="~/Content/animate.min.css" rel="stylesheet" />
+<script src="~/js/jquery.easing.js"></script>
+<script src="~/js/metro/metro-carousel.js"></script>
+<style>
+    .center {
+        margin: 0 auto;
+        width: 95%;
+    }
+
+    .container {
+        margin: 0 auto;
+    }
+</style>
+@using Home.Models
+@model IEnumerable<Transaction>
+<div class="container center" style="margin-top:80px">
+    <div class="metro row center">
+        <div class="col-sm-offset-0">
+            <div class="col-sm-3">
+                <div class="text-center">
+                    <a href="@Url.Action("Create", "Transactions")" id="trans" >
+                        <div class="tile double bg-darkPink">
+                            <div class="tile-content icon">
+                                <span class="icon-dollar-2 fg-white"></span>
+                            </div>
+                            <div class="tile-status" style="color:white">
+                                Transactions
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <a href="@Url.Action("Index", "Categories")">
+                    <div class="tile  double bg-darkRed">
+                        <div class="tile-content icon">
+                            <span class="icon-layers"></span>
+                        </div>
+                        <div class="tile-status text-center" style="color:white">
+                            Categories
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="text-center">
+                    <a href="@Url.Action("Create", "GroceriesLists")">
+                        <div class="tile double bg-darkCyan">
+                            <div class="tile-content icon">
+                                <span class="icon-cart-2 fg-white"></span>
+                            </div>
+                            <div class="tile-status text-center" style="color:white">
+                                Groceries
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="text-center">
+                    <a href="@Url.Action("Index", "Tracking")">
+                        <div class="tile double bg-darkOrange">
+                            <div class="tile-content icon">
+                                <span class="icon-calculate fg-active-dark"></span>
+                            </div>
+                            <div class="tile-status text-center" style="color:white">
+                                Tracking
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="metro row center">
+        <div class="col-sm-3">
+            <a href="@Url.Action("Index","Manage")">
+                <div class="tile double bg-lightOrange">
+                    <div class="tile-content icon">
+                        <span class="icon-user-2 fg-white"></span>
+                    </div>
+                    <div class="tile-status text-center" style="color:white">
+                        Profile
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-3">
+            @if (!Model.Any())
+            {
+                <a href="@Url.Action("Create","Transactions")">
+                    <div class="tile double bg-orange">
+                        <div class="tile-content icon">
+                            <div class="icon-eye"></div>
+                        </div>
+                        <div class="tile-status text-center" style="color:white">
+                            No transactions done at.
+                        </div>
+                    </div>
+                </a>
+            }
+            else
+            {
+                <div class="tile double live bg-orange" data-role="live-tile" data-effect="slideRight" title="Recent Transactions">
+                    <div class="tile-content text">
+                        <div id="my-carousel" class="carousel slide tile-content" style="height:100%;padding-top:0px;" data-ride="carousel">
+                            <ol class="carousel-indicators" style="display:none">
+                                <li data-target="#my-carousel" data-slide-to="0" class="active"></li>
+                                <li data-target="#my-carousel" data-slide-to="1"></li>
+                                <li data-target="#my-carousel" data-slide-to="2"></li>
+                                <li data-target="#my-carousel" data-slide-to="3"></li>
+                                <li data-target="#my-carousel" data-slide-to="5"></li>
+                            </ol>
+                            <div class="carousel-inner">
+                                @foreach (var item in Model)
+                                {
+                                    if (ViewBag.con)
+                                    {
+                                        ViewBag.con = false;
+                                        <div class="item active">
+                                            <img alt="Second slide" src="~/Images/Orange.png">
+                                            <div class="carousel-caption">
+                                                <h3><span class="icon-dollar-2 fg-green"></span> @item.Amount</h3>
+                                                <h4>@item.TransactionName</h4>
+                                                <p>&nbsp;</p>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="item">
+                                            <img alt="Second slide" src="~/Images/Orange.png">
+                                            <div class="carousel-caption">
+                                                <h3><span class="icon-dollar-2 fg-green"></span> @item.Amount</h3>
+                                                <h4>@item.TransactionName</h4>
+                                                <p>&nbsp;</p>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-sm-3">
+            <div class="tile double bg-lightGreen">
+                <div class="tile-content icon">
+                    <div class="icon-skype fg-white"></div>
+                </div>
+                <div class="tile-status text-center" style="color:white">
+                    Recent Expenses Operations
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="text-center">
+                <a href="@Url.Action("ShoppingLists", "GroceriesLists")" style="text-decoration:none;">
+                    <div class="tile double bg-darkTeal">
+                        <div class="tile-content icon">
+                            <div class="icon-clipboard-2 fg-white">
+                            </div>
+                            <div class="tile-status text-center" style="color:white">
+                                Shopping lists
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

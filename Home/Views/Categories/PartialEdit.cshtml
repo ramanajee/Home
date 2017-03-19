@@ -1,0 +1,82 @@
+﻿@model Home.Models.Category
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModal-label">
+        <span class="fa fa-exclamation-triangle" aria-hidden="true"></span>
+        Edit category
+    </h4>
+</div>
+<div class="modal-body">
+    @using (Html.BeginForm("Edit", "Categories", FormMethod.Post, new { id = "EditGroceriesListForm" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal" style="margin:0 auto;width:70%;">
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.CategoryId)
+
+            <div class="form-group input-group">
+                <label class="input-group-addon" style="width:130px;">Name</label>
+                @Html.EditorFor(model => model.CategoryName, new { htmlAttributes = new { @class = "form-control", @required = "required", style = "width:200px;" } })
+            </div>
+            <div class="from-group">
+                <p class="col-md-offset-2 col-md-10" style="display:none;color:red" id="message">CategoryName already exist</p>
+            </div>
+
+            <div class="form-group input-group">
+                <label class="input-group-addon" style="width:130px;">Transaction type</label>
+                @Html.EditorFor(model => model.TransactionType, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", style = "width:200px;" } })
+                @Html.ValidationMessageFor(model => model.TransactionType, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group input-group">
+                <label class="input-group-addon" style="width:130px;">Remarks</label>
+                @Html.EditorFor(model => model.Remarks, new { htmlAttributes = new { @class = "form-control", style = "width:200px;" } })
+                @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.HiddenFor(model => model.ApplicationUsersIdCategory)
+            </div>
+        </div>
+    }
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">cancel</button>
+    <button type="button" id="dialogSave" class="btn btn-success">Save</button>
+</div>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script>
+    $("#dialogSave").click(function () {
+        $("#EditGroceriesListForm").validate();
+        if ($("#EditGroceriesListForm").valid() == true) {
+            var EditGroceriesListForm = $('#EditGroceriesListForm');
+            var checkedradio = $("input[name='TransactionTypes']:checked").val();
+            $("#dialogSave").text("Saving...");
+            $("#dialogSave").addClass("disabled");
+            $.post(EditGroceriesListForm.attr('action'), EditGroceriesListForm.serialize(), function (data) {
+                if (data.success == "naveen") {
+                    $.ajax({
+                        type: "GET",
+                        url: '/Categories/Index/?TransactionCategory=' + checkedradio,
+                        contentType: "application/json;charset=utf-8",
+                        dataType: "html",
+                        processData: true,
+                        success: function (data, status, xhr) {
+                            $('#bodyofpannel').html(data);
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
+                        }
+                    });
+                    $('#myModal').modal('hide');
+                }
+                else if (data.success == "AlredyExist") {
+                    alert(data.success);
+                    $("#dialogSave").text("Yes");
+                    $("#message").show();
+                }
+            });
+        }
+    });
+</script>

@@ -1,0 +1,92 @@
+﻿@model IEnumerable<Home.Models.Transaction>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_userLayout.cshtml";
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/font-awesome.css" rel="stylesheet" />
+<link rel="stylesheet" href="/css/metro-bootstrap.css" />
+<link href="~/css/iconFont.min.css" rel="stylesheet" />
+
+<br />
+@Html.ActionLink("Create New Transaction", "Create")
+<br />
+<br />
+<body id="IndexBody">
+    <div class="modal fade" id="EditDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="QWE">
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">All Transactions</div>
+        <div class="panel-body" id="lo" style="max-height:378px;overflow-y: scroll;">
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Categories.CategoryName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TransactionName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Amount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DateAction)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TransactionTypes)
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Categories.CategoryName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TransactionName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Amount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateAction)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TransactionTypes)
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                @Ajax.ActionLink("Edit", "Edit", new { id = item.TransactionId }, new AjaxOptions { UpdateTargetId = "QWE", HttpMethod = "GET", InsertionMode = InsertionMode.Replace, OnSuccess = "LoadModal" }, htmlAttributes: new { @class = "btn btn-warning btn-xs fa fa-pencil-square-o" })
+                                @Ajax.ActionLink("Delete", "Delete", new { id = item.TransactionId }, new AjaxOptions { UpdateTargetId = "QWE", HttpMethod = "GET", InsertionMode = InsertionMode.Replace, OnSuccess = "LoadModal" }, htmlAttributes: new { @class = "btn btn-danger btn-xs fa fa-minus-circle" })
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <div class="panel-footer">
+            <div class="text-center"> Total Transactions @ViewBag.Count </div>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-2.1.3.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script>
+        function LoadModal() {
+            $("#EditDeleteModal").modal('show');
+        }
+    </script>
+</body>

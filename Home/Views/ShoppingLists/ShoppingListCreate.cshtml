@@ -1,0 +1,154 @@
+﻿@model Home.Models.ShoppingList
+
+@{
+    ViewBag.Title = "Create";
+    var c = ViewBag.Sn;
+}
+
+<style>
+    .hidden {
+        display: none;
+    }
+    .right-inner-addon i {
+        position: absolute;
+        right: 0px;
+        padding: 10px 12px;
+        pointer-events: none;
+    }
+</style>
+
+<link href="~/Content/myStyle.css" rel="stylesheet" />
+@*Begin
+    This for creating Shopping List.Its Displayed on "myModal1" .
+    It displaye on clicking the AddToShopp button in the*@
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModal-label">Shopping List</h4>
+</div>
+<div class="modal-body">
+    @using (Html.BeginForm("Create", "ShoppingLists", FormMethod.Post, new { id = "createShoppingListForm" }))
+    {
+        @Html.AntiForgeryToken()
+    <div style="margin:0 auto;width:60%;">
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group input-group input-group-sm">
+                <label class="input-group-addon"><i>Item&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></label>
+                @Html.EditorFor(model => model.Item, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.groceryItem, @readonly = "readonly", style = "width:180px;" } })
+                @Html.ValidationMessageFor(model => model.Item, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group input-group input-group-sm">
+                <div class="input-group-addon"><i>Category&nbsp;&nbsp;</i></div>
+                @Html.EditorFor(model => model.Category, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.groceryCategory, @readonly = "readonly", style = "width:180px;" } })
+                @Html.ValidationMessageFor(model => model.Category, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group input-group input-group-sm">
+                <label class="input-group-addon"><i>Price/Pack</i></label>
+                @Html.EditorFor(model => model.PricePerPacket, new { htmlAttributes = new { @class = "form-control", style = "width:180px;" } })
+                @Html.ValidationMessageFor(model => model.PricePerPacket, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group input-group">
+                <label class="input-group-addon input-group-sm"><i>Quantity&nbsp;</i></label>
+                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control input-sm", @Value = "1", style = "width:180px;" } })
+                @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                <div class="right-inner-addon"><div class="btn btn-primary btn-sm dec">-</div><div class="btn btn-primary btn-sm inc">+</div></div>
+            </div>
+
+            @*<div id="DisplayInCrementandDecrement ">
+                    <div class="btn-group col-md-offset-3"><div class="btn btn-default inc">+</div><div class="btn btn-default dec">-</div></div>
+                </div>*@
+
+            @*<div class="form-group input-group input-group-sm">
+                    <label class="input-group-addon"><i>Amount&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></label>
+                        @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control " } })
+                        @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+                </div>*@
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ShoppingNameID, "ShoppingNameID", htmlAttributes: new { @class = "control-label hidden" })
+                <div class="col-md-10">
+                    @Html.DropDownList("ShoppingNameID", null, htmlAttributes: new { @class = "form-control hidden", style = "width:180px;" })
+                    @Html.ValidationMessageFor(model => model.ShoppingNameID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.HiddenFor(m=>m.userID)
+            </div>
+
+            <div class="form-group">
+                <div>
+                    @*<input type="button" value="Create" id="AddGroceries" class="btn btn-default ladda-button" data-style="zoom-in" />*@
+                    <button type="button" id="CreateShoppingListButton" class="btn btn-success btn-sm" data-color="red" data-style="zoom-in">Create</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+
+
+    $(document).ready(function () {
+        //$('#Quantity').attr('disabled', 'disabled');
+        // $("#DisplayInCrementandDecrement").append('<div class="btn-group"><div class="btn btn-default inc">+</div><div class="btn btn-default dec">-</div></div>');
+    });
+
+
+    $(".inc").click(function () {
+
+        var valuePresentInQuantityTextbox = $("#Quantity").val();
+
+        var newValue = parseFloat(valuePresentInQuantityTextbox) + 1;
+        $("#Quantity").val(newValue);
+    });
+
+    $(".dec").click(function () {
+
+        var valuePresentInQuantityTextbox = $("#Quantity").val();
+        if (valuePresentInQuantityTextbox > 0) {
+            var newValue = parseFloat(valuePresentInQuantityTextbox) - 1;
+            $("#Quantity").val(newValue);
+        }
+
+    });
+
+    $("#CreateShoppingListButton").click(function () {
+
+        //alert("hai");
+        $("#createShoppingListForm").validate();
+        //alert("bommidi");
+        var shopnameId = $("#ShoppingNameID option:selected").val();
+
+        if ($("#createShoppingListForm").valid() == true) {
+            //alert("naveen");
+            //var l = Ladda.create(document.querySelector('#CreateShoppingListButton'));
+            //l.start();
+
+            var createShoppingListForm = $('#createShoppingListForm');
+            //$.validator.unobtrusive.parse($("#createGroceriesListForm"));
+
+            $.post(createShoppingListForm.attr('action'), createShoppingListForm.serialize(), function (data) {
+
+
+                $("#list2").load("@Url.Action("Index", "ShoppingLists")" + '/?shopname=' + encodeURIComponent(shopnameId),
+                function (response, status, xhr) {
+
+                   // l.stop();
+                    $('#myModal').modal('hide');
+                });
+
+            });
+        }
+
+
+
+    });
+
+</script>

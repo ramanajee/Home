@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Data.Entity;
+using Home.DAL;
+using Home.Models;
+
+namespace DropDown.DAL
+{
+    public class TransactionInitializer : System.Data.Entity.DropCreateDatabaseIfModelChanges<HomeContext>
+    {
+        protected override void Seed(HomeContext context)
+        {
+            var income = new List<Income>()
+            {
+                new Income{CategoryName="salary",ApplicationUsersIdCategory=null},
+                new Income{CategoryName="Rent",ApplicationUsersIdCategory=null},
+                new Income{CategoryName="Business",ApplicationUsersIdCategory=null},
+                new Income{CategoryName="Gifts",ApplicationUsersIdCategory=null},
+                new Income{CategoryName="Interests on Savings",ApplicationUsersIdCategory=null}
+            };
+            income.ForEach(c => context.Categories.Add(c));
+            context.SaveChanges();
+            var expenditure = new List<Expenditure>()
+            {
+                new Expenditure{CategoryName="Market",ApplicationUsersIdCategory=null},
+                new Expenditure{CategoryName="Home Maintainance",ApplicationUsersIdCategory=null},
+                new Expenditure{CategoryName="Health",ApplicationUsersIdCategory=null},
+                new Expenditure{CategoryName="School Fee",ApplicationUsersIdCategory=null},
+                new Expenditure{CategoryName="Loans",ApplicationUsersIdCategory=null}
+            };
+            expenditure.ForEach(c => context.Categories.Add(c));
+            context.SaveChanges();
+        }
+    }
+}

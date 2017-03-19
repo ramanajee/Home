@@ -1,0 +1,79 @@
+﻿@using Microsoft.AspNet.Identity
+@model Home.Models.GroceriesList
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+
+<link href="~/Content/ladda.min.css" rel="stylesheet" />
+
+@*<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModal-label">Edit List</h4>
+</div>
+<div class="modal-body">
+
+    @using (Html.BeginForm("Edit", "GroceriesLists", FormMethod.Post, new { id = "EditGroceriesListForm" }))
+    {
+        @Html.AntiForgeryToken()
+    <div style="margin:0 auto;width:50%">
+        <div class="form-horizontal text-center">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.GroceriesListId)
+            <div class="form-group input-group input-group-sm">
+                <label class="input-group-addon" style="width:100px;"><i>Item Name</i></label>
+                @Html.EditorFor(model => model.ItemName, new { htmlAttributes = new { @class = "form-control", style = "width:180px;" } })
+                @Html.ValidationMessageFor(model => model.ItemName, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group input-group">
+                <label class="input-group-addon input-group-sm" style="width:100px;"><i>Categories</i></label>
+                @Html.DropDownList("GroceriesCategoriesId", null, htmlAttributes: new { @class = "form-control input-sm", style = "width:180px;" })
+                @Html.ValidationMessageFor(model => model.GroceriesCategoriesId, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.HiddenFor(model => model.appUserId, new { Value = @User.Identity.GetUserId() })
+            </div>
+
+
+        </div>
+    </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+            <button type="button" id="dialogSave" class="btn btn-success btn-sm">Save</button>
+        </div>
+    }
+</div>
+
+<script src="~/Scripts/spin.min.js"></script>
+<script src="~/Scripts/ladda.min.js"></script>
+
+
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+
+
+
+
+    $("#dialogSave").click(function () {
+
+        $("#EditGroceriesListForm").validate();
+        if ($("#EditGroceriesListForm").valid() == true) {
+            $("#dialogSave").text("Saving . . . .");
+            $("#dialogSave").addClass('disabled');
+            var EditGroceriesListForm = $('#EditGroceriesListForm');
+
+            $.post(EditGroceriesListForm.attr('action'), EditGroceriesListForm.serialize(), function (data) {
+                $("#List").load("@Url.Action("Index", "GroceriesLists")",
+                function (response, status, xhr) {
+                    $('#myModal').modal('hide');
+                });
+            });
+        }
+    });
+</script>

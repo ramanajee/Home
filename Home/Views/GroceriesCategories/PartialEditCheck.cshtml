@@ -1,0 +1,52 @@
+﻿
+@model IEnumerable<Home.Models.GroceriesList>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" style="color:red" id="myModal-label">
+        <span class="fa fa-exclamation-triangle" aria-hidden="true"></span>
+        Warning
+    </h4>
+
+</div>
+<div class="modal-body">
+    <div> @ViewBag.groceryCat is using in Groceries  List.So Plaese delete the Following items from Groceries list Before Editing @ViewBag.groceryCat </div>
+</div>
+<table class="table" style="max-height:500px;overflow-y: scroll;">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.GroceriesCategory.GroceriesName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ItemName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.appUserId)
+        </th>
+        @*<th></th>*@
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GroceriesCategory.GroceriesName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.appUserId)
+            </td>
+            @*<td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.GroceriesListId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.GroceriesListId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.GroceriesListId })
+                </td>*@
+        </tr>
+    }
+
+</table>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+
+</div>

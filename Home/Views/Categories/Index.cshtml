@@ -1,0 +1,140 @@
+﻿@model IEnumerable<Home.Models.Category>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_userLayout.cshtml";
+}
+
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/font-awesome.css" rel="stylesheet" />
+<link rel="stylesheet" href="/css/metro-bootstrap.css" />
+<link href="~/css/iconFont.min.css" rel="stylesheet" />
+<link href="~/Content/myStyle.css" rel="stylesheet" />
+<link href="~/Content/animate.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-2.1.3.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="usedForModal">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<br />
+<div style="margin:0 auto;width:75%;">
+    <div class="form-group">
+        <div class="btn-group">
+            <label id="All" class="btn btn-primary" style="width:120px;">
+                <input type="radio" name="TransactionTypes" checked="checked" value="All"> All <br>
+            </label>
+            <label id="Income" class="btn btn-success" style="width:120px;">
+                <input type="radio" name="TransactionTypes" value="Income"> Income<br>
+            </label>
+            <label id="Expenditure" class="btn btn-danger" style="width:120px;">
+                <input type="radio" name="TransactionTypes" value="Expenditure"> Expenditure<br>
+            </label>
+        </div>
+    </div>
+    <div class="panel panel-primary" style="width:80%">
+        <div class="panel-heading">
+            Categories
+            @Ajax.ActionLink("Create", "Create", null, new AjaxOptions
+                    {
+                        UpdateTargetId = "usedForModal",
+                        LoadingElementId = "Loading",
+                        InsertionMode = InsertionMode.Replace,
+                        HttpMethod = "GET",
+                        OnSuccess = "f1"
+                    }, new { @class = "btn btn-success btn-sm" })
+            <a style="color:white;text-decoration:none" class="text-right pull-right" href="@Url.Action("Index","GroceriesCategories")"><span class="fa fa-external-link"></span> Groceries</a>
+        </div>
+        <div class="panel-body" id="bodyofpannel" style="max-height:500px;overflow-y: scroll;">
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CategoryName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TransactionType)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Remarks)
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+            {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CategoryName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TransactionType)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Remarks)
+                        </td>
+                        <td>
+                            <div class="form-group btn-group">
+                                @Ajax.ActionLink("Edit", "Edit", new { id = item.CategoryId }, new AjaxOptions { UpdateTargetId = "usedForModal", InsertionMode = InsertionMode.Replace, HttpMethod = "GET", OnSuccess = "f1" }, htmlAttributes: new { @class = "btn btn-warning btn-xs fa fa-pencil-square-o" })
+                                @Ajax.ActionLink("Delete", "Delete", new { id = item.CategoryId }, new AjaxOptions { UpdateTargetId = "usedForModal", InsertionMode = InsertionMode.Replace, HttpMethod = "GET", OnSuccess = "f1" }, htmlAttributes: new { @class = "btn btn-danger btn-xs fa fa-minus-circle" })
+                            </div>
+
+                            @*@Html.ActionLink("Edit", "Edit", new { id = item.CategoryId }) |
+                                @Html.ActionLink("Details", "Details", new { id = item.CategoryId }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.CategoryId })*@
+                        </td>
+                    </tr>
+            }
+
+            </table>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+    $(document).ready(
+        function () {
+
+            $("input[name='TransactionTypes']").click(function () {
+                $('.panel-body').html("");
+                var checkedradio = $("input[name='TransactionTypes']:checked").val();
+                $.ajax({
+                    type: "GET",
+                    url: '/Categories/Index/?TransactionCategory=' + checkedradio,
+
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "html",
+                    processData: true,
+                    success: function (data, status, xhr) {
+                        //alert("The result is : " + status);
+
+                        $('#bodyofpannel').html(data);
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+        });
+
+    function f1() {
+        $("#myModal").modal({
+            backdrop: 'static',
+            keyboard: true
+        });
+        $('#myModal').modal('show');
+    }
+
+
+</script>
+

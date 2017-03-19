@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Home.Models.GroceriesCategories>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.GroceriesName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Remarks)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GroceriesName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Remarks)
+            </td>
+            <td>
+                <div class="form-group btn-group">
+                    @Ajax.ActionLink("Edit", "Edit", new { id = item.GroceriesCategoriesId }, new AjaxOptions { UpdateTargetId = "usedForModal", InsertionMode = InsertionMode.Replace, HttpMethod = "GET", OnSuccess = "f1" }, htmlAttributes: new { @class = "btn btn-warning btn-xs fa fa-pencil-square-o" })
+                    @Ajax.ActionLink("Delete", "Delete", new { id = item.GroceriesCategoriesId }, new AjaxOptions { UpdateTargetId = "usedForModal", InsertionMode = InsertionMode.Replace, HttpMethod = "GET", OnSuccess = "f1" }, htmlAttributes: new { @class = "btn btn-danger btn-xs fa fa-minus-circle" })
+                </div>
+
+                @*@Html.ActionLink("Edit", "Edit", new { id=item.GroceriesCategoriesId }) |
+                    @Html.ActionLink("Details", "Details", new { id=item.GroceriesCategoriesId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id=item.GroceriesCategoriesId })*@
+            </td>
+        </tr>
+    }
+
+</table>

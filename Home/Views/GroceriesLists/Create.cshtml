@@ -1,0 +1,402 @@
+﻿@using Microsoft.AspNet.Identity
+@model Home.Models.GroceriesList
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_userLayout.cshtml";
+
+}
+<style>
+    /*.carousel-control.left, .carousel-control.right {
+        background-image: none;
+    }
+
+    .fa-angle-left {
+        color: black;
+    }
+
+    .fa-angle-right {
+        color: black;}
+        */
+    .center_div {
+        margin: 0 auto;
+        width: 80%; 
+  }
+</style>
+
+
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/font-awesome.css" rel="stylesheet" />
+<link rel="stylesheet" href="/css/metro-bootstrap.css" />
+<link href="~/css/iconFont.min.css" rel="stylesheet" />
+<link href="~/Content/myStyle.css" rel="stylesheet" />
+<link href="~/Content/themes/base/core.css" rel="stylesheet" />
+<link href="~/Content/themes/base/datepicker.css" rel="stylesheet" />
+<link href="~/Content/themes/base/theme.css" rel="stylesheet" />
+<link href="~/Content/animate.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-2.1.3.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Scripts/bootstrap-datepicker.js"></script>
+<link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />
+<script src="~/Scripts/modernizr-2.6.2.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+@*<link href="~/Content/myStyle.css" rel="stylesheet" />
+<link href="~/Content/font-awesome.css" rel="stylesheet" />
+<link rel="stylesheet" href="/css/metro-bootstrap.css" />
+<link href="~/css/iconFont.min.css" rel="stylesheet" />
+<link href="~/Content/animate.min.css" rel="stylesheet" />
+
+<link href="~/Content/themes/base/core.css" rel="stylesheet" />
+<link href="~/Content/themes/base/datepicker.css" rel="stylesheet" />
+<link href="~/Content/themes/base/theme.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-2.1.3.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Scripts/bootstrap-datepicker.js"></script>
+<link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />
+<script src="~/Scripts/modernizr-2.6.2.js"></script>
+<link href="~/Content/ladda.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
+
+@*Begin
+    This modal used for creating,deleting,editing of records
+    id of this modal is "myModal"
+    id that content to be displayed is "myModal1"*@
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="myModal1">
+
+        </div>
+    </div>
+</div>
+
+
+
+@*end*@
+
+@*Begin
+    Here this block of code for creating the grocerieslist based on their category
+
+    Url:GroceriesLists/Create*@
+
+<div class="row">
+    <div class="col-md-5">
+
+        <br />
+        <br />
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">Create Groceries List</div>
+            <div class="panel-body">
+                @using (Html.BeginForm("Create", "GroceriesLists", FormMethod.Post, new { id = "createGroceriesListForm" }))
+                {
+                    @Html.AntiForgeryToken()
+    <div style="margin:0 auto;width:98%">
+        <div class="form-horizontal">
+            <div>
+                @Html.ValidationMessageFor(model => model.ItemName, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.GroceriesCategoriesId, "", new { @class = "text-danger" })
+            </div>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group input-group input-group-sm">
+                <div class="input-group-addon" style="width:120px;"><i>item Name&</i></div>
+                @Html.EditorFor(model => model.ItemName, new { htmlAttributes = new { @class = "form-control input-sm", style = "width:180px;" } })
+            </div>
+
+            <div class="form-group input-group">
+                <div class="input-group-addon input-group-sm" style="width:120px;"><i>Categories</i></div>
+                @Html.DropDownList("GroceriesCategoriesId", null, htmlAttributes: new { @class = "form-control input-sm", style = "width:180px;" })
+                @Ajax.ActionLink("+", "AddNewCategory", null, new AjaxOptions
+                    {
+                        UpdateTargetId = "myModal1",
+                        LoadingElementId = "Loading",
+                        InsertionMode = InsertionMode.Replace,
+                        HttpMethod = "GET",
+                        OnSuccess = "f1"
+                    }, new { @class = "btn btn-primary btn-sm" })
+            </div>
+
+            <div class="form-group">
+                @Html.HiddenFor(model => model.appUserId, new { Value = @User.Identity.GetUserId() })
+            </div>
+
+            <div class="form-group">
+                @*<input type="button" value="Create" id="AddGroceries" class="btn btn-default ladda-button" data-style="zoom-in" />*@
+                <button type="button" id="AddGroceries" class="btn btn-primary btn-sm">Create</button>
+            </div>
+        </div>
+    </div>
+                }
+            </div>
+        </div>
+
+
+       
+
+        @*end*@
+
+
+
+        @*Begin
+            This Panel is used to show the list of groceries created
+            here used "GroceriesCategoryId" dropdown list for show the selected list item only
+            id for loading message is "loadingMessageForSearchGroceries"
+            id "List" where the content list items will be loaded form jquery
+            id "l1" for loading gif icon*@
+        <div>
+            <div class="panel panel-primary">
+                <div class="panel-heading align-center">
+
+                    <div class="form-group input-group">
+                        @*@Html.LabelFor(model => model.GroceriesCategoriesId, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                        <div class="input-group-addon"><i>Categories</i></div>
+                        @Html.DropDownList("GroceriesCategoriesId", null, "Select", htmlAttributes: new { @class = "form-control dropdownforSearchGroceries", style = "width:180px;" })
+                        <p id="loadingMessageForSearchGroceries" class="col-md-2" style="display:none"><span class="fa fa-refresh fa-spin fa-2x"></span></p>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div id="List">
+                        <div id="l1" class="text-center">
+                            <span style="color:#2E8DEF" class="fa fa-spinner fa-spin fa-3x"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*end*@
+
+    <div class="modal fade" id="LoadingModal" tabindex="-1" role="dialog" aria-labelledby="myModal-label" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                </div>
+                <div class="modal-body">
+                    <p class="alert alert-info" style="font:200">Please wait....</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button id="CloseModal" style="display:none"></button>
+    <script>
+        $(document).ready(function () {
+            $("#CloseModal").click(function () {
+                $("#LoadingModal").modal('hide');
+            });
+        });
+    </script>
+    @*Begin
+
+
+        this pannel is show the items added to the shopping table
+        here "my-carousel" is used for showing slides for to create a table name and select existing table name from the dropdownlist
+        id "ShoppName" for creating new shopping table and id "dropdownforShoppingName" for selecting existingtable name
+        id "Titleforshop" used to display as table name in the pannel
+        id "List2" is the place to display the added list items
+        id "pannel2footer" is used to hide delete and new buttons and they will show  on creating shopping Title*@
+    <br />
+    <br />
+    <div class="col-md-7">
+        <div class="panel panel-primary">
+            <div class="panel-heading">List To Shop
+            <a class="text-right pull-right" style="color:white;text-decoration:none" href="@Url.Action("ShoppingLists", "GroceriesLists")"><span class="fa fa-external-link"></span> Created lists</a>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div id="my-carousel" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="item active">
+                                <div class="form-group input-group col-md-offset-2 input-group-sm">
+                                    <label class="input-group-addon"><i>New List</i></label>
+                                    <input type="text" id="ShopName" style="width:180px;" class="form-control input-sm" />
+                                </div>
+                                <div class="form-group col-md-offset-2">
+                                    <input type="button" class="btn btn-primary btn-sm" id="create" value="create" />
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="form-group input-group col-lg-offset-2">
+                                    <label class="input-group-addon input-group-sm"><i>Existing List</i></label>
+                                    @Html.DropDownList("DropDownForShoppingName", (IEnumerable<SelectListItem>)ViewBag.shoppingNameId, "Select", htmlAttributes: new { @class = "form-control input-sm", style = "width:180px;" })
+                                </div>
+                                <div class="form-group col-lg-offset-2">
+                                    <input type="button" id="ShoppingNameInDropDown" class="btn btn-primary btn-sm" value="Ok" />
+                                </div>
+                            </div>
+                        </div>
+                        <a class="left carousel-control" style="background-image:none" href="#my-carousel" data-slide="prev">
+                            <span class="fa fa-angle-left" style="color:black"></span>
+                        </a>
+                        <a class="right carousel-control" style="background-image:none" href="#my-carousel" data-slide="next">
+                            <span class="fa fa-angle-right" style="color:black"></span>
+                        </a>
+                    </div>
+
+                    <div id="titlediv" style="display:none" class="form-group col-md-offset-1">
+                        Present shopping list:  <b><label class="heading" id="TitleforShop"></label></b>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="list2" style="max-height:300px;overflow-y: scroll;">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-footer" id="pannel2footer" style="display:none;">
+                @*<button type="button" id="Pannel2DeleteTable" class='btn btn-success ladda-button' data-color='red' data-style='zoom-in' >Delete</button>*@
+                @Html.ActionLink("Delete", "DeleteShoppingTable", "ShoppingLists", new { Name = "_name_" }, new { @id = "del" }) |
+                @Html.ActionLink("New", "Create", "GroceriesLists")
+            </div>
+        </div>
+    </div>
+</div>
+@*end*@
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script>
+    $("#del").click(function () {
+        var i = $("#TitleforShop").text();
+        //alert(i);
+        $('#del').attr('href', function () {
+            return this.href.replace('_name_', i);
+        })
+        //var i = $("#TitleforShop").text();
+        //alert(i);
+        //var fakedUri = $("#del").prop("href");
+        //var uri = fakedUri.replace("ShopText", i);
+    });
+    // Setting the name of shopping table  from the dropdown list
+    //After selected the name was attached to "titleForshop" and hides " my-carousel" to hide.
+    $("#ShoppingNameInDropDown").click(function () {
+        var ShoppingNameDropDownSelectedValue = $("#DropDownForShoppingName option:selected").text();
+        var id = $("#DropDownForShoppingName option:selected").val();
+
+        if (ShoppingNameDropDownSelectedValue != "Select") {
+            $('#TitleforShop').text(ShoppingNameDropDownSelectedValue);
+            $("#my-carousel").hide();
+            $("#titlediv").show();
+            $("#pannel2footer").show();
+            $("#list2").load("@Url.Action("Index", "ShoppingLists")" + '/?shopname=' + encodeURIComponent(id),
+            function (response, status, xhr) {
+            });
+        }
+        else {
+            return false;
+        }
+    });
+
+    //creating new table name
+    //After selected the name was attached to "titleForshop" and hides " my-carousel" to hide.
+    //created table name is stored in the "shopping name" table URL:-Shoppinglist/ShoppingNameAdd
+
+    $(document).ready(function () {
+        $("#create").click(function () {
+            if (!$("#ShopName").val()) {
+                return false;
+            }
+            $('#TitleforShop').text($("#ShopName").val())
+            $("#pannel2footer").show();
+            var name = encodeURIComponent($("#ShopName").val());
+            var data = { 'Name': name }
+            //alert(name);
+            $.post('/ShoppingLists/ShoppingNameAdd', data,
+        function (data) {
+
+        });
+            $("#my-carousel").hide();
+            $("#titlediv").show();
+        });
+    });
+
+    /* Script:- GroceriesLists/Create
+            On clicking "AddGroceries" button
+            client side validation will be done
+            if validation Successfull code will execute
+            Then starts the effects to the button
+            Next items are Posted to URL:-GroceriesLists/Create
+    */
+
+    $("#AddGroceries").click(function () {
+
+        //alert("Exe");
+        $("#createGroceriesListForm").validate();
+
+
+        if ($("#createGroceriesListForm").valid() == true) {
+            //alert("Exe");
+            $("#LoadingModal").modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+            $("#LoadingModal").modal('show');
+            //var l = Ladda.create(document.querySelector('#AddGroceries'));
+            //l.start();
+
+            var createGroceriesListForm = $('#createGroceriesListForm');
+
+            $.post(createGroceriesListForm.attr('action'), createGroceriesListForm.serialize(), function (data) {
+                $("#List").load("@Url.Action("Index", "GroceriesLists")" + '/?page=' + data.pages,
+                function (response, status, xhr) {
+                    $("#ItemName").val("");
+                    $("#CloseModal").trigger('click');
+                    $.notify({
+                        icon: 'fa fa-check',
+                        message: " Item added to list"
+                    },
+                    {
+                        animate: {
+                            enter: 'animated fadeInRight',
+                            exit: 'animated fadeOutRight'
+                        },
+                        type: 'success'
+                    });
+                });
+            });
+        }
+
+
+
+    });
+
+    //for showing list of groceries based on the selected item in the dropdownlist
+    //URL:-GroceriesList/Index?searchingString
+
+    $(".dropdownforSearchGroceries").change(function () {
+        $("#loadingMessageForSearchGroceries").show();
+        var searchString = $(".dropdownforSearchGroceries option:selected").attr("value");
+        //alert(searchString);
+
+        $("#List").load('@Url.Action("Index", "GroceriesLists")' + '/?searchString=' + searchString,
+            function (response, status, xhr) {
+                $("#loadingMessageForSearchGroceries").hide();
+            });
+    });
+    //this method loads list of groceries on pageload
+    //URL:-GroceriesLists/Index
+    $(document).ready(function () {
+        $("#List").load("@Url.Action("Index", "GroceriesLists")",
+             function (response, status, xhr) {
+             });
+        return false;
+    });
+    function f1() {
+        $("#myModal").modal({
+            backdrop: 'static',
+            keyboard: true
+        });
+        $('#myModal').modal('show');
+    }
+</script> 

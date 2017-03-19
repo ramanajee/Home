@@ -1,0 +1,90 @@
+﻿@model Home.Models.ShoppingList
+
+<link href="~/Content/myStyle.css" rel="stylesheet" />
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModal-label">Edit shopping list</h4>
+</div>
+<div class="modal-body">
+
+    @using (Html.BeginForm("Edit", "ShoppingLists", FormMethod.Post, new { id = "EditShoppingListForm" }))
+    {
+        @Html.AntiForgeryToken()
+    <div style="margin: 0 auto;width:50%;">
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.ShoppingListID)
+
+            <div class="form-group input-group input-group-sm">
+                <label class="input-group-addon" style="width:120px;"><i>Item</i></label>
+                @Html.EditorFor(model => model.Item, new { htmlAttributes = new { @class = "form-control", style = "width:180px;" } })
+                @Html.ValidationMessageFor(model => model.Item, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group input-group input-group-sm">
+                <label class="input-group-addon" style="width:120px;"><i>Category</i></label>
+                @Html.EditorFor(model => model.Category, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", style = "width:180px;" } })
+                @Html.ValidationMessageFor(model => model.Category, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group input-group input-group-sm">
+                <label class="input-group-addon" style="width:120px;"><i>Price/Packet</i></label>
+                @Html.EditorFor(model => model.PricePerPacket, new { htmlAttributes = new { @class = "form-control", style = "width:180px;" } })
+                @Html.ValidationMessageFor(model => model.PricePerPacket, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group input-group input-group-sm">
+                <label class="input-group-addon" style="width:120px;"><i>Quantity</i></label>
+                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control", style = "width:180px;" } })
+                @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group input-group" style="display:none">
+                <label class="input-group-addon input-group-sm" style="width:120px;"><i>Shopping List</i></label>
+                @Html.DropDownList("ShoppingNameID", null, htmlAttributes: new { @class = "form-control input-sm", style = "width:180px;" })
+                @Html.ValidationMessageFor(model => model.ShoppingNameID, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+    </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+            <button type="button" id="dialogSave" class="btn btn-success btn-sm">Save</button>
+        </div>
+    }
+</div>
+
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+
+    $("#dialogSave").click(function () {
+
+        $("#EditShoppingListForm").validate();
+
+        var shopnameId = $("#ShoppingNameID option:selected").val();
+
+        if ($("#EditShoppingListForm").valid() == true) {
+            // var l = Ladda.create(document.querySelector('#dialogSave'));
+            // l.start();
+
+            var EditShoppingListForm = $('#EditShoppingListForm');
+            $("#dialogSave").text("Saving....")
+            $("#dialogSave").addClass('disabled');
+
+            $.post(EditShoppingListForm.attr('action'), EditShoppingListForm.serialize(), function (data) {
+                $("#list2").load("@Url.Action("Index", "ShoppingLists")" + '/?shopname=' + encodeURIComponent(shopnameId),
+                function (response, status, xhr) {
+
+                    $('#myModal').modal('hide');
+                    // l.stop();
+
+                });
+
+            });
+        }
+
+
+    });
+
+</script>

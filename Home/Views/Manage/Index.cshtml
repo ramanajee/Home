@@ -1,0 +1,165 @@
+﻿@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using Home.Models;
+@model Home.Models.IndexViewModel
+@{
+    ViewBag.Title = "Manage";
+}
+<style>
+    #menu {
+        border-right: 1px solid lightblue;
+        height: 100%;
+    }
+</style>
+
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/font-awesome.css" rel="stylesheet" />
+<link rel="stylesheet" href="/css/metro-bootstrap.css" />
+<link href="~/css/metro-bootstrap-responsive.css" rel="stylesheet" />
+<link href="~/css/iconFont.min.css" rel="stylesheet" />
+<link href="~/Content/themes/base/core.css" rel="stylesheet" />
+<link href="~/Content/themes/base/datepicker.css" rel="stylesheet" />
+<link href="~/Content/themes/base/theme.css" rel="stylesheet" />
+<link href="~/Content/animate.min.css" rel="stylesheet" />
+<link href="~/css/fileinput.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-2.1.3.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/fileinput.js"></script>
+<p class="text-success">@ViewBag.StatusMessage</p>
+<div style="padding-top:5%;padding-left:15%">
+    <div class="panel panel-primary" style="border-radius:25px;box-shadow:10px 5px 10px 0 lightblue;width:90%;">
+        <div class="panel-body">
+            <div>
+                <h4 class="text-center">Change your account settings</h4>
+                <hr />
+                <div class="row">
+                    <div class="col-sm-8" id="menu">
+                        <dl class="dl-horizontal">
+                            <dt style="padding-top:2%;">Password:</dt>
+                            <dd style="padding-top:2%;">
+                                @if (Model.HasPassword)
+                                {
+                                    <a href="@Url.Action("ChangePassword","Manage")"><span class="fa fa-external-link"></span> Change password</a>
+                                    @*@Html.ActionLink("Change your password", "ChangePassword")*@
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("Create", "SetPassword")
+                                }
+                            </dd>
+                            <dt style="padding-top:2%;">External Logins:</dt>
+                            <dd style="padding-top:2%;">
+                                you have <span style="color:white;border-radius:25px;" class="btn btn-primary img-circle">@Model.Logins.Count</span> external logins <a href="@Url.Action("ManageLogins","Manage")"><span class="fa fa-external-link"></span> Manage</a>
+                                @*@Html.ActionLink("Manage", "ManageLogins")*@
+                            </dd>
+                            @*
+                                Phone Numbers can used as a second factor of verification in a two-factor authentication system.
+
+                                 See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
+                                    for details on setting up this ASP.NET application to support two-factor authentication using SMS.
+
+                                 Uncomment the following block after you have set up two-factor authentication
+                            *@
+                            @*
+                                <dt>Phone Number:</dt>
+                                <dd>
+                                    @(Model.PhoneNumber ?? "None") [
+                                    @if (Model.PhoneNumber != null)
+                                    {
+                                        @Html.ActionLink("Change", "AddPhoneNumber")
+                                        @: &nbsp;|&nbsp;
+                                        @Html.ActionLink("Remove", "RemovePhoneNumber")
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("Add", "AddPhoneNumber")
+                                    }
+                                    ]
+                                </dd>
+                            *@
+                            @*<dt>Two-Factor Authentication:</dt>
+                                <dd>
+                                    <p>
+                                        There are no two-factor authentication providers configured. See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
+                                        for details on setting up this ASP.NET application to support two-factor authentication.
+                                    </p>*@
+                            @*@if (Model.TwoFactor)
+                                {
+                                    using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <text>Enabled
+                                        <input type="submit" value="Disable" class="btn btn-link" />
+                                        </text>
+                                    }
+                                }
+                                else
+                                {
+                                    using (Html.BeginForm("EnableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <text>Disabled
+                                        <input type="submit" value="Enable" class="btn btn-link" />
+                                        </text>
+                                    }
+                                }*@
+                            @*</dd>*@
+                            <dt style="padding-top:2%;">
+                                Image
+                            </dt>
+                            <dd>
+                                @using (Html.BeginForm("Create", "Manage", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                {
+                                    <div class="row" style="padding-top:2%;">
+                                        <div class="col-sm-11">
+                                            <div class="form-group">
+                                                <input type="file" class="file" id="ImageData" multiple data-preview-file-type="image" data-preview-file-icon="" name="ImageData" accept=".jpg,.png,.gif,.jpeg">
+                                                <div id="errorBlock" class="help-block"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-sm-12" style="padding-left:20%;">
+                                @{
+                                    var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                                    var currentUser = manager.FindById(User.Identity.GetUserId());
+                                }
+                                <img src="@Url.Action("RetrieveImage", "Manage", new { id=currentUser.Id })" class="img-responsive" height="100" width="100">
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" style="padding-left:10%">
+                                @currentUser.FullName
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" style="padding-left:10px;">
+                                <a href="#" style="text-decoration:underline">@currentUser.Email</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#ImageData").fileinput({
+            'showPreview': true,
+            'allowedFileExtensions': ['jpg', 'png', 'gif'],
+            'elErrorContainer': '#errorBlock'
+        });
+        $("#ImageData").on('fileloaded', function (event, file, previewId, index) {
+            alert('i = ' + index + ', id = ' + previewId + ', file = ' + file.name);
+        });
+        $("#ImageData").fileinput()
+    });
+
+</script>

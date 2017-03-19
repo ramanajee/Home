@@ -1,0 +1,27 @@
+﻿@using Microsoft.AspNet.Identity
+@model Home.Models.Category
+
+@*this is the partial view stored  on dialog box*@
+<div class="form-horizontal" style="margin:0 auto;width:60%">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group input-group input-group-sm">
+        <label class="input-group-addon">Name</label>
+        @Html.EditorFor(model => model.CategoryName, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.CategoryName, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <p id="empty" style="display:none;color:red" class=" col-md-12"> Category Name can not be Empty</p>
+    </div>
+</div>
+
+@*<div class="form-group">
+        <div id="empty" style="display:none"> @Html.Label("Category should not be empty", new { htmlAttributes = new { @class = "inputclass" } })</div>
+    </div>*@
+<div class="form-group">
+    @Html.HiddenFor(model => model.ApplicationUsersIdCategory, new { Value = @User.Identity.GetUserId() })
+</div>
+<style>
+    .inputclass {
+        color: red;
+    }
+</style>

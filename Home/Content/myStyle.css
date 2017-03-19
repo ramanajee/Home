@@ -1,0 +1,5 @@
+﻿body {
+}
+.input-group-sm > .input-group-addon {
+    height: 18px !important;
+}

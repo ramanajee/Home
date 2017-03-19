@@ -1,0 +1,382 @@
+﻿@using Microsoft.AspNet.Identity
+@model Home.Models.Transaction
+
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_userLayout.cshtml";
+}
+
+
+<style>
+    .center_div {
+        margin: 0 auto;
+        width: 98%; /* value of your choice which suits your alignment */
+    }
+</style>
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/font-awesome.css" rel="stylesheet" />
+<link rel="stylesheet" href="/css/metro-bootstrap.css" />
+<link href="~/css/iconFont.min.css" rel="stylesheet" />
+<link href="~/Content/myStyle.css" rel="stylesheet" />
+<link href="~/Content/themes/base/core.css" rel="stylesheet" />
+<link href="~/Content/themes/base/datepicker.css" rel="stylesheet" />
+<link href="~/Content/themes/base/theme.css" rel="stylesheet" />
+<link href="~/Content/animate.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-2.1.3.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Scripts/bootstrap-datepicker.js"></script>
+<link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />
+<script src="~/Scripts/modernizr-2.6.2.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal-label" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModal-label">Add new category</h4>
+            </div>
+            <div class="modal-body">
+                @*this div is load the partail form*@
+                <div id='myModalContent'></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" id="dialogSave" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <br />
+    <br />
+    <br />
+    <div class="col-sm-4">
+
+        @using (Html.BeginForm("Create", "Transactions", FormMethod.Post, new { id = "Tdata" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Add Transaction
+                    <a style="color:white" class="text-right pull-right" href="@Url.Action("Create", "GroceriesLists")"><span class="fa fa-external-link"> Groceries lists</span></a>
+                </div>
+                <div class="panel-body center_div">
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        @*Radio butoons for Income and Expenditure*@
+                        <div class="form-group">
+                            <div class="btn-group">
+                                <label id="Income" class="btn btn-success">
+                                    @Html.RadioButtonFor(x => x.TransactionTypes, Home.Models.TransactionType.Income, new { @checked = "checked" }) Income
+                                </label>
+                                <label id="Expenditure" class="btn btn-danger">
+                                    @Html.RadioButtonFor(x => x.TransactionTypes, Home.Models.TransactionType.Expenditure) Expenditure
+                                </label>
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+                                @Html.RadioButtonFor(x => x.TransactionTypes, Home.Models.TransactionType.Income, new {@class="btn btn-primary", @checked = "checked" }) Income
+                                @Html.RadioButtonFor(x => x.TransactionTypes, Home.Models.TransactionType.Expenditure) Expenditure
+                            </div>*@
+                        <div class="form-group input-group input-group-sm">
+                            <div class="input-group-addon" style="width:120px;"><i>Transaction Name</i></div>
+                            @Html.EditorFor(model => model.TransactionName, new { htmlAttributes = new { @class = "form-control input-sm",style="width:180px;" } })
+                        </div>
+
+                        <div class="form-group input-group input-group-sm">
+                            <div class="input-group-addon" style="width:120px;"><i>Description</i></div>
+                            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control input-sm", style = "width:180px;" } })
+                        </div>
+
+                        <div class="form-group input-group input-group-sm">
+                            <div class="input-group-addon" style="width:120px;"><i>Amount</i></div>
+                            @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control input-sm", style = "width:180px;" } })
+                        </div>
+
+                        <div class="form-group input-group input-group-sm">
+                            <div class="input-group-addon" style="width:120px;"><i>Date</i></div>
+                            @Html.EditorFor(model => model.DateAction, new { htmlAttributes = new {  @class = "form-control input-sm", @placeholder = "YYYY / MM / DD", style = "width:180px;" } })
+                        </div>
+
+                        <script>
+                            $(document).ready(function () {
+                                $("#DateAction").datepicker({
+                                    dateFormat: 'yy-mm-dd',
+                                }).val();
+                            });
+                        </script>
+
+                        <div class="form-group input-group">
+                            <div class="input-group-addon input-group-sm" style="width:120px;"><i>Category</i></div>
+                            @Html.DropDownList("CategoryId", null, htmlAttributes: new { @class = "form-control input-sm", style = "width:180px;" })
+                            @*Ajax call for adding more category Items to drop dowinlist this link opens dialog box in that CreteItem Partial form is loaded*@
+                            @Ajax.ActionLink("+", "CreateItem", null, new AjaxOptions
+                    {
+                        UpdateTargetId = "myModalContent",
+                        LoadingElementId = "Loading",
+                        InsertionMode = InsertionMode.Replace,
+                        HttpMethod = "GET",
+                        OnSuccess = "f1"
+                    }, new { @class = "btn btn-primary btn-sm" })
+                            @*Loading gif icon*@
+                            @*<div id="Loading" style="display:none">
+                                    <img src="~/712.GIF" />
+                                </div>*@
+                            @*This div is for loading CreatItem form contents into it.*@
+                            <div id="d1" style="background-color:aqua">
+                                <div id="warningSpan"></div>
+                            </div>
+                            @*This div is for diapalaying the comfirmation dialog box after saving or creating items*@
+                            <div id="ConfirmationDialog" style="background-color:green;color:red">
+                                @*this inner div used to display the text for the Confirmation dialog box*@
+                                <div id="myDialogText"></div>
+                            </div>
+
+
+
+                            @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+                        </div>
+                        @*this will stores login userid to retrieve the data belong to that user only*@
+                        <div class="form-group">
+                            @Html.HiddenFor(model => model.ApplicationUsersId, new { Value = @User.Identity.GetUserId() })
+                        </div>
+
+
+                        <div class="form-group">
+                            <input type="button" id="sbt" value="Create" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="col-sm-7">
+        <div class="panel panel-primary" id="tabData">
+            <div class="panel-heading">Today History<a class="text-right pull-right" style="color:white" href="@Url.Action("Index","Transactions")"><span class="fa fa-external-link">All Transactions</span></a></div>
+            <div class="panel-body" id="LoadingView" style="min-height:378px;max-height:378px;overflow-y: scroll;">
+               <div class="text-center" style="color:lightgreen"><span class="fa fa-refresh fa-spin fa-5x"></span></div>
+            </div>
+        </div>
+        @*@Html.Action("_PartialIndex", new List<Home.Models.Transaction>())*@
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Back to Home", "Index", "User")
+</div>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery-ui-1.11.4.js")
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script>
+    function DivScroll() {
+        $("#LoadingView").animate({ scrollTop: $("#LoadingView")[0].scrollHeight }, 1000);
+    }
+</script>
+
+<script>
+    $.ajax({
+        url: '/Transactions/_PartialIndex',
+        contentType: 'application/html;charset=utf-8',
+        type: 'GET',
+        dataType: 'html'
+    }).success(function (data) {
+        $("#LoadingView").html(data)
+    }).error(function (xhr, status) {
+        alert(status);
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#sbt").click(function (e) {
+            e.preventDefault();
+            var as = $("#TransactionName").val()
+            var desc = $("#Description").val()
+            var amt = $("#Amount").val()
+            var dat = $("#DateAction").val()
+            if (!(as) || !(desc) || !(amt) || !(dat)) {
+                $.notify({
+                    icon: 'fa fa-exclamation-triangle',
+                    title: '<strong>Error!</strong>',
+                    message: 'All fields are required.'
+                }, {
+                    type: 'danger',
+                    animate: {
+                        enter: 'animated bounceIn',
+                        exit: 'animated bounceOut'
+                    },
+                    allow_dismiss: false,
+                    placement: {
+                        from: 'top',
+                        align: 'center'
+                    }
+                });
+                setTimeout(function () {
+                    $.notifyClose();
+                }, 3000);
+            }
+
+            else if (!$.isNumeric(amt)) {
+                $("#Amount").focus();
+                $.notify({
+                    icon: 'fa fa-exclamation-triangle',
+                    title: '<strong>Warning!</strong>',
+                    message: 'Amount filed must be number'
+                }, {
+                    type: 'warning',
+                    animate: {
+                        enter: 'animated bounceIn',
+                        exit: 'animated bounceOut'
+                    },
+                    placement: {
+                        from: 'top',
+                        align: 'center'
+                    }
+                });
+            }
+
+            else {
+                var form = $("#Tdata");
+                var TName = $("#TransactionName").val();
+              
+                $.ajax({
+                    url: '@Url.Action("Create")',
+                    data: form.serialize(),
+                    type: 'POST',
+                    success: function (data) {
+                        $.ajax({
+                            url: '/Transactions/_PartialIndex',
+                            type: 'GET',
+                            dataType: 'html'
+                        }).success(function (data) {
+                            $("#LoadingView").html(data);
+                            //notification
+                            $.notify({
+                                icon: 'fa fa-check ',
+                                message: TName + ' Transaction added'
+                            },
+                            {
+                               type: 'success',
+                               animate: {
+                                        enter: 'animated fadeInRight',
+                                        exit: 'animated fadeOutRight'
+                                         }
+                            });
+                        }).error(function (xhr, status) {
+                            $.notify({
+                                icon: 'fa fa-exclamation-triangle',
+                                title: '<strong>Error!</strong>',
+                                message: '<strong>' + status + '</strong.'
+                            }, {
+                                type: 'danger',
+                                animate: {
+                                    enter: 'animated bounceIn',
+                                    exit: 'animated bounceOut'
+                                }
+                            });
+                        });
+                        //DivScroll();
+                        $("#TransactionName").val('');
+                        $("#Description").val('');
+                        $("#Amount").val('');
+                    }
+                });
+            }
+        });
+
+    });
+</script>
+
+<script>
+    $("#dialogSave").click(function () {
+
+        var category = {
+            "CategoryName": $("#CategoryName").val(),
+            "ApplicationUsersIdCategory": $("#ApplicationUsersIdCategory").val()
+        };
+        var checkedradio = $("input[name='TransactionTypes']:checked").val();
+        if (category.CategoryName == '') {
+            $("#empty").text("Name Can't be empty");
+            $("#empty").show();
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: '/Categories/AddItem?TransactionTypes=' + checkedradio,
+                data: JSON.stringify(category),
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                processData: true,
+                success: function (data, status, xhr) {
+                    if (data != null && data.success) {
+                        $('#CategoryId').append(
+                               $('<option></option>')
+                                   .val(data.category.CategoryId)
+                                   .html(data.category.CategoryName)
+                                   .prop('selected', true)  // Selects the new Genre in the DropDown LB
+                           );
+                        $('#myModal').modal('hide');
+                    } else {
+                        alert(data.responseText);
+                        $("#empty").text(data.responseText);
+                        $("#empty").show();
+                    }
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                },
+            });
+        }
+    });
+
+    function f1() {
+        $('#myModal').modal('show');
+    }
+
+    $(
+        function () {
+            listenRadioIdClick();
+            //click first on load
+        });
+
+    // this funciton works when selecting the radio button
+    //checked radio button we store the checked radio button value into the checkradio variable
+    //we are passing the variable checkradio through Url.
+    //based on radio button item dropdownlist will populated.
+    function listenRadioIdClick() {
+        $("input[name='TransactionTypes']").click(function () {
+            var checkedradio = $("input[name='TransactionTypes']:checked").val();
+            //var checkedradio="Income"
+            $.ajax({
+                type: "GET",
+                url: '/Categories/GetHome/' + checkedradio,
+
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                processData: true,
+                success: function (data, status, xhr) {
+                    var ddl = $('#CategoryId');
+                    ddl.empty();
+                    $.each(data, function (id, option) {
+                        ddl.append($('<option></option>').val(option.CategoryId).html(option.CategoryName));
+                    });
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+        });
+    }
+
+
+</script>

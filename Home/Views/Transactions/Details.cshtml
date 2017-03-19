@@ -1,0 +1,83 @@
+﻿@model Home.Models.Transaction
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_userLayout.cshtml";
+
+}
+
+
+<link href="~/Content/font-awesome.css" rel="stylesheet" />
+<link rel="stylesheet" href="/css/metro-bootstrap.css" />
+@*<link href="~/css/metro-bootstrap-responsive.min.css" rel="stylesheet" />*@
+<link href="~/css/iconFont.min.css" rel="stylesheet" />
+
+
+<h2>Details</h2>
+
+<div>
+    <h4>Transaction</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Categories.CategoryName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Categories.CategoryName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TransactionName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TransactionName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateAction)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateAction)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TransactionTypes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TransactionTypes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ApplicationUsersId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ApplicationUsersId)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.TransactionId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

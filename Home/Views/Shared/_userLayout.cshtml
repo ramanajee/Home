@@ -1,0 +1,77 @@
+﻿@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using Home.Models;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/themes/base/css")
+    @Styles.Render("~/Content/themes/base/css", "~/Content/css")
+    <style>
+        .circle-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            display: block;
+            background-position-y: 25%;
+        }
+    </style>
+</head>
+<body style="background-color:#e7eaf3">
+    <div class="metro">
+        <nav class="navigation-bar">
+            <nav class="navigation-bar-content">
+                <span class="element-divider"></span>
+                <div class="element place-right">
+                </div>
+                @if (Request.IsAuthenticated)
+                {
+                    <a style="text-decoration:none" href="@Url.Action("Index","User")" class=" element place-left"><span class="icon-grid-view"></span> Home</a>
+                    var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                    var currentUser = manager.FindById(User.Identity.GetUserId());
+                    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "place-right" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <span class="element-divider place-right"></span>
+                        @*<a style="text-decoration:none" class="element place-right" href="@Url.Action("Index","Home")"><span class="icon-switch"></span></a>*@
+                        <a style="text-decoration:none" class="element place-right" title="Logout" href="javascript:document.getElementById('logoutForm').submit()"><span class="icon-switch"></span></a>
+                        <span class="element-divider place-right"></span>
+                        @*<button class="element image-button image-left place-right">
+                                @Html.ActionLink("Hello " + currentUser.ProfileUserName + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage Account", style = "text-decoration:none" })
+                                <img src="~/Images/empty_user.jpg" class="img-circle" />
+                            </button>*@
+                        <a class="element image-button image-left place-right" style="text-decoration:none" href="@Url.Action("Index", "Manage")">
+                            Hello @currentUser.ProfileUserName!
+                            @*<img src="~/Images/empty_user.jpg" class="img-circle" />*@
+                            <img src="@Url.Action("RetrieveImage", "Manage", new { id=currentUser.Id })" class="img-circle" />
+                        </a>
+                    }
+                }
+                else
+                {
+                    <a style="text-decoration:none" href="@Url.Action("Index","Home")" class="element place-left"><span class="icon-grid-view"></span> Home</a>
+                    <span class="element-divider place-right"></span>
+                    <a style="text-decoration:none" class="element place-right" href="@Url.Action("Login","Account")">Login</a>
+                    <span class="element-divider place-right"></span>
+                    <a style="text-decoration:none" class="element place-right" href="@Url.Action("Register","Account")">Register</a>
+                }
+            </nav>
+        </nav>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        @*<footer class="text-center">
+                <hr />
+                 <p>&copy; @DateTime.Now.Year - Microsoft </p>
+            </footer>*@
+    </div>
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryui")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Home.Models.ShoppingList>
+<style>
+    .the-table {
+        table-layout: fixed;
+        tab-size: initial;
+        word-wrap: break-word;
+    }
+
+    .small {
+        padding: 2px 4px;
+        font-size: xx-small;
+        line-height: normal;
+        -webkit-border-radius: 1px;
+        -moz-border-radius: 1px;
+        border-radius: 1px;
+    }
+
+    .cus {
+        width: 10px;
+        display: inline-block;
+        white-space: nowrap;
+    }
+</style>
+<table class="table">
+    <tr>
+        <th>
+            Item
+        </th>
+        <th>
+            Category
+        </th>
+        <th>
+            Price/Packet
+        </th>
+        <th>
+            Quantity
+        </th>
+        <th>
+            Amount
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        @Html.HiddenFor(modelItem => item.ShoppingName.Name)
+
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Item)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PricePerPacket)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+        </tr>
+    }
+
+</table>

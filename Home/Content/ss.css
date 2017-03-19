@@ -1,0 +1,10 @@
+﻿
+.icon-at:before{
+    content:"@";
+    font-weight:bold;
+}
+#my-tabs.nav-tabs > li > a {
+    padding: 8px 16px;
+    margin:0;
+    margin-right: -4px;
+}
